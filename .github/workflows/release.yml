@@ -3,8 +3,8 @@ name: Release Pipeline
 on:
   push:
     tags:
-      - 'v*'        # e.g., v0.1.0
-  workflow_dispatch: # allow manual runs
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,29 +12,21 @@ jobs:
     strategy:
       matrix:
         include:
-          # Build on Ubuntu with cross
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-
-          # macOS Intel
           - os: macos-latest
             target: x86_64-apple-darwin
-
-          # macOS Apple Silicon
           - os: macos-latest
             target: aarch64-apple-darwin
-
-          # Windows
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Rust (stable)
+      - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -44,17 +36,20 @@ jobs:
       - name: Add Rust target
         run: rustup target add ${{ matrix.target }}
 
-      - name: Install cross (Ubuntu only)
+      # Only install `cross` if we're on Ubuntu
+      - name: Install cross
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Build binary
-        run: |
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            cross build --release --target ${{ matrix.target }}
-          else
-            cargo build --release --target ${{ matrix.target }}
-          fi
+      # Build with cross on Ubuntu
+      - name: Build with cross
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: cross build --release --target ${{ matrix.target }}
+
+      # Build natively on macOS or Windows
+      - name: Build native
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -68,7 +63,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Download artifacts
