@@ -1,0 +1,10 @@
+---
+title: "Frameblaze Documentation"
+---
+
+Welcome to **Frameblaze** docs!
+
+## Getting Started
+
+- Some quick instructions or overview
+- More content here...

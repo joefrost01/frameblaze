@@ -1,0 +1,27 @@
+# docs/_quarto.yml
+project:
+  type: website
+
+website:
+  title: "Frameblaze Docs"
+  navbar:
+    background: primary
+    # The default location of your home page
+    right:
+      - href: index.qmd
+        text: "Home"
+  sidebar:
+    # Provide a local sidebar
+    open: true
+  search: true  # Enable built-in Quarto search
+
+# Theme options:
+format:
+  html:
+    theme:
+      light: sandstone
+      dark: darkly
+    # You can specify additional theme options here
+    toc: true # show table of contents in pages
+    toc-depth: 2
+

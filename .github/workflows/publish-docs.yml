@@ -1,0 +1,28 @@
+name: Publish Quarto Docs
+
+on:
+  push:
+    branches: [ "main" ]   # or your default branch name
+  workflow_dispatch:       # allows manual runs
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Install Quarto
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/install@v2
+
+      # Render & Publish to GitHub Pages
+      - name: Render and Publish
+        uses: quarto-dev/quarto-actions@v2
+        with:
+          publish: pages       # Tells Quarto to publish to GH Pages
+          # Optional: specify the docs folder if it's not default
+          #  e.g. "quarto render docs/ --output docs/_site" internally
+          # If your `_quarto.yml` is inside docs, Quarto automatically detects it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
