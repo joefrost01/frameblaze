@@ -3,44 +3,57 @@ name: Release Pipeline
 on:
   push:
     tags:
-      - 'v*'
-  workflow_dispatch:
+      - 'v*'        # e.g., v0.1.0
+  workflow_dispatch: # allow manual runs
 
 jobs:
   build:
     name: Build Artifacts
     strategy:
       matrix:
-        runner: [ubuntu-latest, macos-latest, windows-latest]
-        target:
-          ubuntu-latest: [x86_64-unknown-linux-gnu]
-          macos-latest: [aarch64-apple-darwin, x86_64-apple-darwin]
-          windows-latest: [x86_64-pc-windows-msvc]
-    runs-on: ${{ matrix.runner }}
+        include:
+          # Linux via `cross`
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+
+          # macOS Intel
+          - os: macos-latest
+            target: x86_64-apple-darwin
+
+          # macOS Apple Silicon
+          - os: macos-latest
+            target: aarch64-apple-darwin
+
+          # Windows
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Checkout Code
+      - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Install Rust
+      - name: Install Rust (stable)
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
           profile: minimal
+          toolchain: stable
           override: true
 
-      - name: Install cross
-        if: ${{ matrix.runner == 'ubuntu-latest' }}
+      - name: Install cross (Linux only)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Build Binary
+      - name: Build binary
         run: |
-          if [ "${{ matrix.runner }}" == "ubuntu-latest" ]; then
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
             cross build --release --target ${{ matrix.target }}
           else
             cargo build --release --target ${{ matrix.target }}
           fi
 
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}-binary
@@ -52,10 +65,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Download Artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
           path: artifacts
@@ -66,11 +79,11 @@ jobs:
           name: "Release v${{ github.ref_name }}"
           body: |
             ### Changes
-            - Automatically built binaries are attached below.
+            - Automatically built binaries attached below.
           files: |
             artifacts/x86_64-unknown-linux-gnu/*
-            artifacts/x86_64-pc-windows-msvc/*
-            artifacts/aarch64-apple-darwin/*
             artifacts/x86_64-apple-darwin/*
+            artifacts/aarch64-apple-darwin/*
+            artifacts/x86_64-pc-windows-msvc/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
