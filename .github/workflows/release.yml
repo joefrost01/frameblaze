@@ -29,12 +29,12 @@ jobs:
           override: true
 
       - name: Install cross
-        if: matrix.runner == 'ubuntu-latest'
+        if: ${{ matrix.runner == 'ubuntu-latest' }}
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Build Binary
         run: |
-          if [[ ${{ matrix.runner }} == 'ubuntu-latest' ]]; then
+          if [ "${{ matrix.runner }}" == "ubuntu-latest" ]; then
             cross build --release --target ${{ matrix.target }}
           else
             cargo build --release --target ${{ matrix.target }}
