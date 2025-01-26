@@ -2,27 +2,23 @@ name: Publish Quarto Docs
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # 1) Set up Quarto
       - name: Quarto Setup
         uses: quarto-dev/quarto-actions/setup@v2
 
-      # 2) Publish Quarto site to GitHub Pages (gh-pages branch by default)
       - name: Quarto Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          target: gh-pages
-          # Optional: specify the path if your Quarto config is in a subfolder
-          # path: docs
+          path: docs           # <--- key fix here
+          target: gh-pages     # or whichever branch you want
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
