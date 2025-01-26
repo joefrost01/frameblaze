@@ -3,27 +3,25 @@ name: Release Pipeline
 on:
   push:
     tags:
-      - 'v*' # Trigger on version tags (e.g., v0.0.1)
-  workflow_dispatch: # Allow manual triggering
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build Artifacts
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        runner: [ubuntu-latest, macos-latest, windows-latest]
         target:
-          - x86_64-unknown-linux-gnu
-          - x86_64-pc-windows-msvc
-          - aarch64-apple-darwin
-          - x86_64-apple-darwin
+          ubuntu-latest: [x86_64-unknown-linux-gnu]
+          macos-latest: [aarch64-apple-darwin, x86_64-apple-darwin]
+          windows-latest: [x86_64-pc-windows-msvc]
+    runs-on: ${{ matrix.runner }}
     steps:
-      # Checkout the code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Install Rust and cross
-      - name: Install Rust and cross
+      - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -31,13 +29,17 @@ jobs:
           override: true
 
       - name: Install cross
+        if: matrix.runner == 'ubuntu-latest'
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      # Build the binary for the current target
       - name: Build Binary
-        run: cross build --release --target ${{ matrix.target }}
+        run: |
+          if [[ ${{ matrix.runner }} == 'ubuntu-latest' ]]; then
+            cross build --release --target ${{ matrix.target }}
+          else
+            cargo build --release --target ${{ matrix.target }}
+          fi
 
-      # Upload artifacts
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -50,24 +52,20 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Download artifacts
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           path: artifacts
 
-      # Create GitHub Release and attach artifacts
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Release v${{ github.ref_name }}" # Release title
+          name: "Release v${{ github.ref_name }}"
           body: |
             ### Changes
-            - Add details of your changes here.
             - Automatically built binaries are attached below.
           files: |
             artifacts/x86_64-unknown-linux-gnu/*
