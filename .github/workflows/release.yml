@@ -1,0 +1,87 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Artifacts
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            target: x86_64-apple-darwin
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Add Rust target
+        run: rustup target add ${{ matrix.target }}
+
+      # Only install `cross` if we're on Ubuntu
+      - name: Install cross
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      # Build with cross on Ubuntu
+      - name: Build with cross
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: cross build --release --target ${{ matrix.target }}
+
+      # Build natively on macOS or Windows
+      - name: Build native
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}-binary
+          path: target/${{ matrix.target }}/release
+          retention-days: 7
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release v${{ github.ref_name }}"
+          body: |
+            ### Changes
+            - Automatically built binaries attached below.
+          files: |
+            artifacts/x86_64-unknown-linux-gnu/*
+            artifacts/aarch64-apple-darwin/*
+            artifacts/x86_64-apple-darwin/*
+            artifacts/x86_64-pc-windows-msvc/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
