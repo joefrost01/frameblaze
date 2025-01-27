@@ -1,16 +1,122 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Frameblaze Documentation",
+    "objectID": "roadmap.html",
+    "href": "roadmap.html",
+    "title": "Roadmap",
     "section": "",
-    "text": "Welcome to Frameblaze docs!"
+    "text": "Frameblaze Roadmap\nBelow are planned features and improvements:\n\nChunked Processing\n\nTrue streaming approach for massive CSV/Parquet files.\n\nExcel Read/Write\n\nSupport for .xlsx files using community crates like calamine.\n\nAdvanced Transformers\n\nRow-based filtering (--where).\nDerived columns (--compute).\nMulti-step transformations.",
+    "crumbs": [
+      "Roadmap"
+    ]
   },
   {
-    "objectID": "index.html#getting-started",
-    "href": "index.html#getting-started",
-    "title": "Frameblaze Documentation",
-    "section": "Getting Started",
-    "text": "Getting Started\n\nSome quick instructions or overview\nMore content here…"
+    "objectID": "getting-started.html",
+    "href": "getting-started.html",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Welcome to Frameblaze! Below are steps to install and run it.\n\n\n\nDownload the latest release from GitHub Releases.\n\nLinux: x86_64-unknown-linux-gnu\nmacOS: x86_64-apple-darwin or aarch64-apple-darwin\nWindows: x86_64-pc-windows-msvc\n\nPlace the executable in your $PATH (e.g., /usr/local/bin) or reference it directly.\n\n\n\nAlternatively, clone this repository and build:\ngit clone https://github.com/joefrost01/frameblaze.git\ncd frameblaze\ncargo build --release\n\n\n\n\n# Basic CSV to Parquet conversion\nframeblaze csv parquet input.csv --output output.parquet\nFor more details, see the From and To pages.",
+    "crumbs": [
+      "Getting Started"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#installation",
+    "href": "getting-started.html#installation",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Download the latest release from GitHub Releases.\n\nLinux: x86_64-unknown-linux-gnu\nmacOS: x86_64-apple-darwin or aarch64-apple-darwin\nWindows: x86_64-pc-windows-msvc\n\nPlace the executable in your $PATH (e.g., /usr/local/bin) or reference it directly.\n\n\n\nAlternatively, clone this repository and build:\ngit clone https://github.com/joefrost01/frameblaze.git\ncd frameblaze\ncargo build --release",
+    "crumbs": [
+      "Getting Started"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#basic-usage",
+    "href": "getting-started.html#basic-usage",
+    "title": "Getting Started",
+    "section": "",
+    "text": "# Basic CSV to Parquet conversion\nframeblaze csv parquet input.csv --output output.parquet\nFor more details, see the From and To pages.",
+    "crumbs": [
+      "Getting Started"
+    ]
+  },
+  {
+    "objectID": "to.html",
+    "href": "to.html",
+    "title": "To Formats",
+    "section": "",
+    "text": "Frameblaze writes Polars DataFrame objects to several formats:\n\nCSV\nParquet\nJSON (line-delimited, planned)\nExcel (planned)\nAvro (planned)\n\n\n\n# Write DataFrame to CSV\nframeblaze parquet csv bigdata.parquet --output result.csv\n\nBy default, writes headers.\nAppend Mode: --append if you want to add rows to an existing CSV.",
+    "crumbs": [
+      "Targets"
+    ]
+  },
+  {
+    "objectID": "to.html#csv",
+    "href": "to.html#csv",
+    "title": "To Formats",
+    "section": "",
+    "text": "# Write DataFrame to CSV\nframeblaze parquet csv bigdata.parquet --output result.csv\n\nBy default, writes headers.\nAppend Mode: --append if you want to add rows to an existing CSV.",
+    "crumbs": [
+      "Targets"
+    ]
+  },
+  {
+    "objectID": "from.html",
+    "href": "from.html",
+    "title": "From Formats",
+    "section": "",
+    "text": "Frameblaze provides a modular trait for reading data from various formats into a Polars DataFrame. Currently supported:\n\nCSV\nParquet\nJSON (planned)\nExcel (planned)\nAvro (planned)\n\n\n\n# Example usage\nframeblaze csv parquet input.csv --output data.parquet\n\nUses Polars’ CsvReader under the hood.\nInfers schema automatically, or you can specify certain options in future versions (e.g., delimiters).",
+    "crumbs": [
+      "Sources"
+    ]
+  },
+  {
+    "objectID": "from.html#csv",
+    "href": "from.html#csv",
+    "title": "From Formats",
+    "section": "",
+    "text": "# Example usage\nframeblaze csv parquet input.csv --output data.parquet\n\nUses Polars’ CsvReader under the hood.\nInfers schema automatically, or you can specify certain options in future versions (e.g., delimiters).",
+    "crumbs": [
+      "Sources"
+    ]
+  },
+  {
+    "objectID": "transformers.html",
+    "href": "transformers.html",
+    "title": "Transformers",
+    "section": "",
+    "text": "Transformers allow you to modify data before writing it to the target format.\n\n\nThe first transformer: ColumnFilter. It: - Includes or excludes specified columns. - Does not otherwise alter rows.\n\n\n# Include only columns \"name\" and \"age\"\nframeblaze parquet csv data.parquet --output filtered.csv \\\n    --include-columns name,age",
+    "crumbs": [
+      "Transformers"
+    ]
+  },
+  {
+    "objectID": "transformers.html#columnfilter",
+    "href": "transformers.html#columnfilter",
+    "title": "Transformers",
+    "section": "",
+    "text": "The first transformer: ColumnFilter. It: - Includes or excludes specified columns. - Does not otherwise alter rows.\n\n\n# Include only columns \"name\" and \"age\"\nframeblaze parquet csv data.parquet --output filtered.csv \\\n    --include-columns name,age",
+    "crumbs": [
+      "Transformers"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Frameblaze Overview",
+    "section": "",
+    "text": "Frameblaze is a high-performance CLI tool for converting data between multiple formats, including Parquet, CSV, JSON, and more. It leverages Polars for robust, columnar data processing in Rust and supports chunked processing, transformations, and more.\n\n\n\nMultiple Formats: Parquet, CSV, JSON, Excel (planned).\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#key-features",
+    "href": "index.html#key-features",
+    "title": "Frameblaze Overview",
+    "section": "",
+    "text": "Multiple Formats: Parquet, CSV, JSON, Excel (planned).\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
+    "crumbs": [
+      "Introduction"
+    ]
   }
 ]

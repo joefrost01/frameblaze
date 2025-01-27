@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Frameblaze Overview – Frameblaze</title>
+<title>Roadmap – Frameblaze</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Introduction</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./roadmap.html">Roadmap</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -128,7 +128,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
@@ -158,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./roadmap.html" class="sidebar-item-text sidebar-link">
+  <a href="./roadmap.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Roadmap</span></a>
   </div>
 </li>
@@ -172,10 +172,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#frameblaze" id="toc-frameblaze" class="nav-link active" data-scroll-target="#frameblaze">Frameblaze</a>
-  <ul class="collapse">
-  <li><a href="#key-features" id="toc-key-features" class="nav-link" data-scroll-target="#key-features">Key Features</a></li>
-  </ul></li>
+  <li><a href="#frameblaze-roadmap" id="toc-frameblaze-roadmap" class="nav-link active" data-scroll-target="#frameblaze-roadmap">Frameblaze Roadmap</a></li>
   </ul>
 </nav>
     </div>
@@ -184,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Frameblaze Overview</h1>
+<h1 class="title">Roadmap</h1>
 </div>
 
 
@@ -201,21 +198,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="frameblaze" class="level1">
-<h1>Frameblaze</h1>
-<p><strong>Frameblaze</strong> is a high-performance CLI tool for converting data between multiple formats, including Parquet, CSV, JSON, and more. It leverages <a href="https://www.pola.rs/">Polars</a> for robust, columnar data processing in Rust and supports chunked processing, transformations, and more.</p>
-<section id="key-features" class="level2">
-<h2 class="anchored" data-anchor-id="key-features">Key Features</h2>
+<section id="frameblaze-roadmap" class="level1">
+<h1>Frameblaze Roadmap</h1>
+<p>Below are planned features and improvements:</p>
+<ol type="1">
+<li><strong>Chunked Processing</strong>
 <ul>
-<li><strong>Multiple Formats</strong>: Parquet, CSV, JSON, Excel (planned).</li>
-<li><strong>Fast and Memory-Efficient</strong>: Uses Polars’ columnar engine.</li>
-<li><strong>Transformers</strong>: Column filtering, row transformations.</li>
-<li><strong>Modular Architecture</strong>: Extensible for future formats.</li>
-</ul>
-<p>Please see <strong><a href="./getting-started.html">Getting Started</a></strong> to install and run Frameblaze.</p>
+<li>True streaming approach for massive CSV/Parquet files.</li>
+</ul></li>
+<li><strong>Excel Read/Write</strong>
+<ul>
+<li>Support for <code>.xlsx</code> files using community crates like <code>calamine</code>.</li>
+</ul></li>
+<li><strong>Advanced Transformers</strong>
+<ul>
+<li>Row-based filtering (<code>--where</code>).</li>
+<li>Derived columns (<code>--compute</code>).</li>
+<li>Multi-step transformations.</li>
+</ul></li>
+</ol>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
