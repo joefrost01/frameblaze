@@ -1,0 +1,34 @@
+---
+title: "Getting Started"
+---
+
+# Getting Started
+
+Welcome to **Frameblaze**! Below are steps to install and run it.
+
+## Installation
+
+1. **Download the latest release** from [GitHub Releases](https://github.com/joefrost01/frameblaze/releases).
+   - Linux: `x86_64-unknown-linux-gnu`
+   - macOS: `x86_64-apple-darwin` or `aarch64-apple-darwin`
+   - Windows: `x86_64-pc-windows-msvc`
+2. **Place the executable** in your `$PATH` (e.g., `/usr/local/bin`) or reference it directly.
+
+### Building from Source
+
+Alternatively, clone this repository and build:
+
+```bash
+git clone https://github.com/joefrost01/frameblaze.git
+cd frameblaze
+cargo build --release
+```
+
+## Basic Usage
+
+```bash
+# Basic CSV to Parquet conversion
+frameblaze csv parquet input.csv --output output.parquet
+```
+
+For more details, see the **[From](from.qmd)** and **[To](to.qmd)** pages.

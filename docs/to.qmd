@@ -1,0 +1,23 @@
+---
+title: "To Formats"
+---
+
+# To: Writing Data
+
+Frameblaze writes Polars `DataFrame` objects to several formats:
+
+- **CSV**
+- **Parquet**
+- **JSON** (line-delimited, planned)
+- **Excel** (planned)
+- **Avro** (planned)
+
+## CSV
+
+```bash
+# Write DataFrame to CSV
+frameblaze parquet csv bigdata.parquet --output result.csv
+```
+
+- By default, writes headers.
+- **Append Mode**: `--append` if you want to add rows to an existing CSV.

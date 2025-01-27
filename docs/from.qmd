@@ -1,0 +1,23 @@
+---
+title: "From Formats"
+---
+
+# From: Reading Data
+
+Frameblaze provides a **modular trait** for reading data from various formats into a Polars `DataFrame`. Currently supported:
+
+- **CSV**
+- **Parquet**
+- **JSON** (planned)
+- **Excel** (planned)
+- **Avro** (planned)
+
+## CSV
+
+```bash
+# Example usage
+frameblaze csv parquet input.csv --output data.parquet
+```
+
+- Uses Polars' `CsvReader` under the hood.
+- Infers schema automatically, or you can specify certain options in future versions (e.g., delimiters).

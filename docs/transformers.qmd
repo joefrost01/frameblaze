@@ -1,0 +1,21 @@
+---
+title: "Transformers"
+---
+
+# Transformers
+
+**Transformers** allow you to modify data before writing it to the target format.
+
+## ColumnFilter
+
+The first transformer: **ColumnFilter**. It:
+- **Includes** or **excludes** specified columns.
+- Does not otherwise alter rows.
+
+### Example
+
+```bash
+# Include only columns "name" and "age"
+frameblaze parquet csv data.parquet --output filtered.csv \
+    --include-columns name,age
+```
