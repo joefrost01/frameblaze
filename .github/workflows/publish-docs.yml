@@ -1,26 +1,25 @@
-name: Publish Quarto Website
-
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main  # or whichever branch you use
+    branches: main
+
+name: Quarto Publish
 
 jobs:
-  build-and-publish:
+  build-deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      # 1. Check out your repository code
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Set up Quarto on the runner
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      # 3. Render and publish the Quarto project from "docs" to "gh-pages"
-      - name: Publish to GitHub Pages
+      - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          render: docs      # location of your Quarto project folder
-          to: gh-pages      # branch for Pages
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
