@@ -10,6 +10,12 @@ use config::Config;
 use r#from::{DataReader, csv::CsvReaderImpl, parquet::ParquetReaderImpl};
 use r#to::{DataWriter, csv::CsvWriterImpl, parquet::ParquetWriterImpl};
 use transform::{Transform, column_filter::ColumnFilter};
+use crate::from::avro::AvroReaderImpl;
+use crate::from::ipc::IpcReaderImpl;
+use crate::from::json::JsonReaderImpl;
+use crate::to::avro::AvroWriterImpl;
+use crate::to::ipc::IpcWriterImpl;
+use crate::to::json::JsonWriterImpl;
 
 fn main() -> Result<()> {
     let matches = build_cli().get_matches();
@@ -44,12 +50,18 @@ fn main() -> Result<()> {
     let reader = match config.from_format.as_str() {
         "csv" => DataReader::Csv(CsvReaderImpl::default()),
         "parquet" => DataReader::Parquet(ParquetReaderImpl::default()),
+        "avro" => DataReader::Avro(AvroReaderImpl::default()),
+        "ipc" => DataReader::Ipc(IpcReaderImpl::default()),
+        "json" => DataReader::Json(JsonReaderImpl::default()),
         _ => panic!("Unsupported from_format"),
     };
 
     let writer = match config.to_format.as_str() {
         "csv" => DataWriter::Csv(CsvWriterImpl::default()),
         "parquet" => DataWriter::Parquet(ParquetWriterImpl::default()),
+        "avro" => DataWriter::Avro(AvroWriterImpl::default()),
+        "ipc" => DataWriter::Ipc(IpcWriterImpl::default()),
+        "json" => DataWriter::Json(JsonWriterImpl::default()),
         _ => panic!("Unsupported to_format"),
     };
 

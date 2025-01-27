@@ -24,9 +24,9 @@ website:
           href: index.qmd
         - text: "Getting Started"
           href: getting-started.qmd
-        - text: "Sources"
+        - text: "From"
           href: from.qmd
-        - text: "Targets"
+        - text: "To"
           href: to.qmd
         - text: "Transformers"
           href: transformers.qmd

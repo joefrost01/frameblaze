@@ -8,7 +8,8 @@ repository = "https://github.com/yourusername/frameblaze"
 
 [dependencies]
 clap = { version = "4.1", features = ["derive"] }
-polars = { version = "0.45.1", features = ["lazy", "parquet", "csv"] }
+polars = { version = "0.46.0", features = ["lazy", "parquet", "csv", "ipc", "json"] }
+polars-io = { version = "0.46.0",features = ["avro"] }
 anyhow = "1.0"
 toml = "0.7"
 thiserror = "1.0"

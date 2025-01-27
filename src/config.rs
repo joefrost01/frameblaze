@@ -33,10 +33,10 @@ impl Config {
 
     pub fn validate(&self) -> Result<()> {
         // Basic validation
-        if !["csv", "parquet"].contains(&self.from_format.as_str()) {
+        if !["csv", "parquet", "avro", "ipc", "json"].contains(&self.from_format.as_str()) {
             anyhow::bail!("Invalid 'from_format': {}", self.from_format);
         }
-        if !["csv", "parquet"].contains(&self.to_format.as_str()) {
+        if !["csv", "parquet", "avro", "ipc", "json"].contains(&self.to_format.as_str()) {
             anyhow::bail!("Invalid 'to_format': {}", self.to_format);
         }
         if self.output_file.is_none() {

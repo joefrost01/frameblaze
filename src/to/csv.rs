@@ -7,7 +7,6 @@ pub struct CsvWriterImpl;
 
 impl super::ToFile for CsvWriterImpl {
     fn write_data(&self, path: &str, df: &DataFrame, _append: bool) -> Result<()> {
-
         let file = File::create(path)?;
 
         let mut df_to_write = df.clone();
@@ -23,9 +22,9 @@ impl super::ToFile for CsvWriterImpl {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::NamedTempFile;
-    use std::fs;
     use crate::to::ToFile;
+    use std::fs;
+    use tempfile::NamedTempFile;
 
     #[test]
     fn test_write_valid_csv() {
@@ -34,8 +33,7 @@ mod tests {
             "name" => &["Alice", "Bob"],
             "age" => &[30, 25],
             "city" => &["New York", "Los Angeles"]
-        }
-            .unwrap();
+        }.unwrap();
 
         // Create a temporary file
         let temp_file = NamedTempFile::new().unwrap();
@@ -59,8 +57,7 @@ mod tests {
             "name" => &["Alice"],
             "age" => &[30],
             "city" => &["New York"]
-        }
-            .unwrap();
+        }.unwrap();
 
         // Try writing to a non-existent directory
         let file_path = "/nonexistent_dir/output.csv";

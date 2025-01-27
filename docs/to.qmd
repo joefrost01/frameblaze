@@ -8,9 +8,9 @@ Frameblaze writes Polars `DataFrame` objects to several formats:
 
 - **CSV**
 - **Parquet**
-- **JSON** (line-delimited, planned)
-- **Excel** (planned)
-- **Avro** (planned)
+- **JSON** (line-delimited)
+- **Arrow-IPC**
+- **Avro**
 
 ## CSV
 

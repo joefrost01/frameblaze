@@ -9,6 +9,9 @@ pub trait ToFile {
 pub enum DataWriter {
     Csv(csv::CsvWriterImpl),
     Parquet(parquet::ParquetWriterImpl),
+    Avro(avro::AvroWriterImpl),
+    Ipc(ipc::IpcWriterImpl),
+    Json(json::JsonWriterImpl),
 }
 
 impl DataWriter {
@@ -16,9 +19,15 @@ impl DataWriter {
         match self {
             DataWriter::Csv(w) => w.write_data(path, df, append),
             DataWriter::Parquet(w) => w.write_data(path, df, append),
+            DataWriter::Avro(w) => w.write_data(path, df, append),
+            DataWriter::Ipc(w) => w.write_data(path, df, append),
+            DataWriter::Json(w) => w.write_data(path, df, append),
         }
     }
 }
 
 pub mod csv;
 pub mod parquet;
+pub mod avro;
+pub mod ipc;
+pub mod json;

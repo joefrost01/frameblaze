@@ -8,7 +8,7 @@ title: "Frameblaze Overview"
 
 ## Key Features
 
-- **Multiple Formats**: Parquet, CSV, JSON, Excel (planned).
+- **Multiple Formats**: Parquet, CSV, JSON, Avro, Arrow-IPC.
 - **Fast and Memory-Efficient**: Uses Polars’ columnar engine.
 - **Transformers**: Column filtering, row transformations.
 - **Modular Architecture**: Extensible for future formats.

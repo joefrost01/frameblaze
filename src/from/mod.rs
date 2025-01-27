@@ -9,6 +9,9 @@ pub trait FromFile {
 pub enum DataReader {
     Csv(csv::CsvReaderImpl),
     Parquet(parquet::ParquetReaderImpl),
+    Avro(avro::AvroReaderImpl),
+    Ipc(ipc::IpcReaderImpl),
+    Json(json::JsonReaderImpl),
 }
 
 impl DataReader {
@@ -16,9 +19,15 @@ impl DataReader {
         match self {
             DataReader::Csv(r) => r.read_data(path),
             DataReader::Parquet(r) => r.read_data(path),
+            DataReader::Avro(r) => r.read_data(path),
+            DataReader::Ipc(r) => r.read_data(path),
+            DataReader::Json(r) => r.read_data(path),
         }
     }
 }
 
 pub mod csv;
 pub mod parquet;
+pub mod avro;
+pub mod ipc;
+pub mod json;

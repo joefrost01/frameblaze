@@ -8,9 +8,9 @@ Frameblaze provides a **modular trait** for reading data from various formats in
 
 - **CSV**
 - **Parquet**
-- **JSON** (planned)
-- **Excel** (planned)
-- **Avro** (planned)
+- **JSON**
+- **Arrow-IPC**
+- **Avro**
 
 ## CSV
 

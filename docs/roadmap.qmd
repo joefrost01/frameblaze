@@ -7,12 +7,13 @@ title: "Roadmap"
 Below are planned features and improvements:
 
 1. **Chunked Processing**
-   - True streaming approach for massive CSV/Parquet files.
+   - True streaming approach for massive files.
 
 2. **Excel Read/Write**
    - Support for `.xlsx` files using community crates like `calamine`.
 
 3. **Advanced Transformers**
    - Row-based filtering (`--where`).
-   - Derived columns (`--compute`).
-   - Multi-step transformations.
+
+4. **Cloud Storage**
+   - Directly read/write from cloud storage like S3, GCS etc.
