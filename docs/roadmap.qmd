@@ -2,8 +2,6 @@
 title: "Roadmap"
 ---
 
-# Frameblaze Roadmap
-
 Below are planned features and improvements:
 
 1. **Chunked Processing**

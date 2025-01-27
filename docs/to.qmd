@@ -2,8 +2,6 @@
 title: "To Formats"
 ---
 
-# To: Writing Data
-
 Frameblaze writes Polars `DataFrame` objects to several formats:
 
 - **CSV**

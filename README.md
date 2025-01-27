@@ -10,7 +10,7 @@
 Check out the **[official documentation](https://joefrost01.github.io/frameblaze/)** for a quick start and usage guides.
 
 ## Features
-- Convert Parquet ↔ CSV (single-chunk in memory for MVP).
+- Convert Parquet ↔ CSV.
 - Include or exclude columns via CLI flags.
 - Extendable architecture to add more formats (Excel, JSON) or transformations later.
 - Apache-2.0 licensed.
@@ -41,8 +41,8 @@ frameblaze parquet csv input.parquet --output filtered.csv --exclude-columns add
 
 ## Roadmap
 * True streaming/chunk-based reading/writing.
-* Additional formats (JSON, Excel, Avro, etc.).
-* More complex transformations (filter rows, derived columns).
+* Cloud storage
+* More complex transformations (filter rows).
 * Config files and environment variable support for all options.
 
 ## License

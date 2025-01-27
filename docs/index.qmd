@@ -2,8 +2,6 @@
 title: "Frameblaze Overview"
 ---
 
-# Frameblaze
-
 **Frameblaze** is a high-performance CLI tool for converting data between multiple formats, including Parquet, CSV, JSON, and more. It leverages [Polars](https://www.pola.rs/) for robust, columnar data processing in Rust and supports chunked processing, transformations, and more.
 
 ## Key Features

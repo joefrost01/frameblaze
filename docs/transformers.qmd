@@ -2,8 +2,6 @@
 title: "Transformers"
 ---
 
-# Transformers
-
 **Transformers** allow you to modify data before writing it to the target format.
 
 ## ColumnFilter

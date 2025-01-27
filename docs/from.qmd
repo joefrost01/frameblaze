@@ -2,8 +2,6 @@
 title: "From Formats"
 ---
 
-# From: Reading Data
-
 Frameblaze provides a **modular trait** for reading data from various formats into a Polars `DataFrame`. Currently supported:
 
 - **CSV**
