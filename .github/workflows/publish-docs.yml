@@ -1,24 +1,33 @@
-name: Publish Quarto Docs
+name: Publish Quarto Website
 
 on:
   push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
+    branches:
+      - main  # or your primary development branch
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Quarto Setup
+    steps:
+      # 1. Check out the current repository code
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # 2. Set up Quarto
+      - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Quarto Publish
+      # 3. Build and publish the Quarto project
+      - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          path: docs           # <--- key fix here
-          target: gh-pages     # or whichever branch you want
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # By default, this action looks for _quarto.yml in the root;
+          # We tell it to build from "docs" since your content is there.
+          project_dir: docs
+
+          # Target GitHub Pages branch
+          target_branch: gh-pages
+
+          # Use the default GITHUB_TOKEN to push
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,39 +1,50 @@
 project:
   type: website
 
+# Configure the website
 website:
+  title: "Frameblaze"
+  # The navbar brand will display the logo + project name
   navbar:
-    logo: images/logo.png
-    background: primary
+    brand:
+      text: "Frameblaze"
+      href: index.qmd
+    logo: "images/logo.png"
+    search: true
     right:
-      - text: "Home"
-        href: index.qmd
-      - text: "Getting Started"
-        href: getting-started.qmd
-      - text: "From"
-        href: from.qmd
-      - text: "To"
-        href: to.qmd
-      - text: "Transformers"
-        href: transformers.qmd
-      - text: "Roadmap"
-        href: roadmap.qmd
+      - icon: github
+        href: "https://github.com/joefrost01/frameblaze"
+      - text: "Download"
+        href: "https://github.com/joefrost01/frameblaze/releases"
 
+  # Define the left sidebar navigation structure
   sidebar:
-    style: docked  # Enables the Table of Contents sidebar
-    search: true  # Enables the search bar
-    contents:
-      - index.qmd
-      - getting-started.qmd
-      - from.qmd
-      - to.qmd
-      - transformers.qmd
-      - roadmap.qmd
+    - contents:
+        - text: "Introduction"
+          href: index.qmd
+        - text: "Getting Started"
+          href: getting-started.qmd
+        - text: "Sources"
+          href: from.qmd
+        - text: "Targets"
+          href: to.qmd
+        - text: "Transformers"
+          href: transformers.qmd
+        - text: "Roadmap"
+          href: roadmap.qmd
 
-theme:
-  light: sandstone
-  dark: darkly
-
+# Theme configuration
 format:
   html:
+    theme:
+      light: sandstone
+      dark: darkly
+    toc: true
+    toc-location: right
     css: styles.css
+
+# (Optional) Execute options if you have code in pages
+execute:
+  warning: false
+  echo: false
+

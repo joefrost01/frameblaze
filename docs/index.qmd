@@ -10,8 +10,7 @@ title: "Frameblaze Overview"
 
 - **Multiple Formats**: Parquet, CSV, JSON, Excel (planned).
 - **Fast and Memory-Efficient**: Uses Polars’ columnar engine.
-- **Transformers**: Column filtering, row transformations (planned).
-- **Append**: Append new data to existing CSV files.
+- **Transformers**: Column filtering, row transformations.
 - **Modular Architecture**: Extensible for future formats.
 
 Please see **[Getting Started](getting-started.qmd)** to install and run Frameblaze.
