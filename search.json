@@ -4,7 +4,7 @@
     "href": "roadmap.html",
     "title": "Roadmap",
     "section": "",
-    "text": "Frameblaze Roadmap\nBelow are planned features and improvements:\n\nChunked Processing\n\nTrue streaming approach for massive CSV/Parquet files.\n\nExcel Read/Write\n\nSupport for .xlsx files using community crates like calamine.\n\nAdvanced Transformers\n\nRow-based filtering (--where).\nDerived columns (--compute).\nMulti-step transformations.",
+    "text": "Frameblaze Roadmap\nBelow are planned features and improvements:\n\nChunked Processing\n\nTrue streaming approach for massive files.\n\nExcel Read/Write\n\nSupport for .xlsx files using community crates like calamine.\n\nAdvanced Transformers\n\nRow-based filtering (--where).\n\nCloud Storage\n\nDirectly read/write from cloud storage like S3, GCS etc.",
     "crumbs": [
       "Roadmap"
     ]
@@ -44,9 +44,9 @@
     "href": "to.html",
     "title": "To Formats",
     "section": "",
-    "text": "Frameblaze writes Polars DataFrame objects to several formats:\n\nCSV\nParquet\nJSON (line-delimited, planned)\nExcel (planned)\nAvro (planned)\n\n\n\n# Write DataFrame to CSV\nframeblaze parquet csv bigdata.parquet --output result.csv\n\nBy default, writes headers.\nAppend Mode: --append if you want to add rows to an existing CSV.",
+    "text": "Frameblaze writes Polars DataFrame objects to several formats:\n\nCSV\nParquet\nJSON (line-delimited)\nArrow-IPC\nAvro\n\n\n\n# Write DataFrame to CSV\nframeblaze parquet csv bigdata.parquet --output result.csv\n\nBy default, writes headers.\nAppend Mode: --append if you want to add rows to an existing CSV.",
     "crumbs": [
-      "Targets"
+      "To"
     ]
   },
   {
@@ -56,7 +56,7 @@
     "section": "",
     "text": "# Write DataFrame to CSV\nframeblaze parquet csv bigdata.parquet --output result.csv\n\nBy default, writes headers.\nAppend Mode: --append if you want to add rows to an existing CSV.",
     "crumbs": [
-      "Targets"
+      "To"
     ]
   },
   {
@@ -64,9 +64,9 @@
     "href": "from.html",
     "title": "From Formats",
     "section": "",
-    "text": "Frameblaze provides a modular trait for reading data from various formats into a Polars DataFrame. Currently supported:\n\nCSV\nParquet\nJSON (planned)\nExcel (planned)\nAvro (planned)\n\n\n\n# Example usage\nframeblaze csv parquet input.csv --output data.parquet\n\nUses Polars’ CsvReader under the hood.\nInfers schema automatically, or you can specify certain options in future versions (e.g., delimiters).",
+    "text": "Frameblaze provides a modular trait for reading data from various formats into a Polars DataFrame. Currently supported:\n\nCSV\nParquet\nJSON\nArrow-IPC\nAvro\n\n\n\n# Example usage\nframeblaze csv parquet input.csv --output data.parquet\n\nUses Polars’ CsvReader under the hood.\nInfers schema automatically, or you can specify certain options in future versions (e.g., delimiters).",
     "crumbs": [
-      "Sources"
+      "From"
     ]
   },
   {
@@ -76,7 +76,7 @@
     "section": "",
     "text": "# Example usage\nframeblaze csv parquet input.csv --output data.parquet\n\nUses Polars’ CsvReader under the hood.\nInfers schema automatically, or you can specify certain options in future versions (e.g., delimiters).",
     "crumbs": [
-      "Sources"
+      "From"
     ]
   },
   {
@@ -104,7 +104,7 @@
     "href": "index.html",
     "title": "Frameblaze Overview",
     "section": "",
-    "text": "Frameblaze is a high-performance CLI tool for converting data between multiple formats, including Parquet, CSV, JSON, and more. It leverages Polars for robust, columnar data processing in Rust and supports chunked processing, transformations, and more.\n\n\n\nMultiple Formats: Parquet, CSV, JSON, Excel (planned).\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
+    "text": "Frameblaze is a high-performance CLI tool for converting data between multiple formats, including Parquet, CSV, JSON, and more. It leverages Polars for robust, columnar data processing in Rust and supports chunked processing, transformations, and more.\n\n\n\nMultiple Formats: Parquet, CSV, JSON, Avro, Arrow-IPC.\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
     "crumbs": [
       "Introduction"
     ]
@@ -114,7 +114,7 @@
     "href": "index.html#key-features",
     "title": "Frameblaze Overview",
     "section": "",
-    "text": "Multiple Formats: Parquet, CSV, JSON, Excel (planned).\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
+    "text": "Multiple Formats: Parquet, CSV, JSON, Avro, Arrow-IPC.\nFast and Memory-Efficient: Uses Polars’ columnar engine.\nTransformers: Column filtering, row transformations.\nModular Architecture: Extensible for future formats.\n\nPlease see Getting Started to install and run Frameblaze.",
     "crumbs": [
       "Introduction"
     ]
