@@ -45,6 +45,7 @@ mod tests {
 
         // Verify the DataFrame
         let df_read = result.unwrap();
+        assert!(df.equals(&df_read));
         assert_eq!(df_read.shape(), (2, 3)); // 2 rows, 3 columns
         assert_eq!(df_read.get_column_names(), &["name", "age", "city"]);
     }

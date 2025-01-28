@@ -56,6 +56,7 @@ mod tests {
             .unwrap();
 
         // Ensure the written and read DataFrames match
+        assert!(df.equals(&read_df));
         assert_eq!(df.shape(), read_df.shape());
         assert_eq!(df.get_column_names(), read_df.get_column_names());
         assert_eq!(df.get_row(0).unwrap(), read_df.get_row(0).unwrap());
