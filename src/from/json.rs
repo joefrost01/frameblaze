@@ -19,58 +19,34 @@ impl super::FromFile for JsonReaderImpl {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io::Write;
-    use tempfile::NamedTempFile;
     use crate::from::FromFile;
+    use crate::test_utils::helpers::*;
+    use tempfile::NamedTempFile;
 
-    #[test]
-    fn test_read_valid_json() {
-        // Create a DataFrame and write it to a temporary Parquet file
-        let mut temp_file = NamedTempFile::new().unwrap();
-        let df = df! {
-        "name" => &["Alice", "Bob"],
-        "age" => &[30, 25],
-        "city" => &["New York", "Los Angeles"]
-    }.unwrap();
-
-        // Pass `temp_file` directly to ParquetWriter
-        JsonWriter::new(&mut temp_file)
-            .with_json_format(JsonFormat::JsonLines)
-            .finish(&mut df.clone())
-            .unwrap();
-
-        // Instantiate ParquetReaderImpl and read the file
-        let reader = JsonReaderImpl::default();
-        let result = reader.read_data(temp_file.path().to_str().unwrap());
-
-        // Verify the DataFrame
-        let df_read = result.unwrap();
-        assert!(df.equals(&df_read));
-        assert_eq!(df_read.shape(), (2, 3)); // 2 rows, 3 columns
-        assert_eq!(df_read.get_column_names(), &["name", "age", "city"]);
+    fn reader() -> JsonReaderImpl {
+        JsonReaderImpl::default()
     }
 
     #[test]
-    fn test_missing_json_file() {
-        // Attempt to read a non-existent file
-        let reader = JsonReaderImpl::default();
-        let result = reader.read_data("non_existent_file.parquet");
+    fn test_read_valid_df() {
+        let writer_fn = |temp_file: &mut NamedTempFile, df: &DataFrame| -> Result<()> {
+            JsonWriter::new(temp_file).with_json_format(JsonFormat::JsonLines).finish(&mut df.clone())?;
+            Ok(())
+        };
+        let reader = Box::new(reader());
+        test_write_then_read(writer_fn, reader).unwrap();
+    }
 
-        // Verify that an error is returned
+    #[test]
+    fn test_missing_source_file() {
+        let result = reader().read_data("non_existent_file");
         assert!(result.is_err());
     }
 
     #[test]
-    fn test_read_malformed_json() {
-        // Create a malformed Parquet file
-        let mut temp_file = NamedTempFile::new().unwrap();
-        writeln!(temp_file, "this is not valid parquet data").unwrap();
-
-        // Instantiate ParquetReaderImpl and attempt to read the file
-        let reader = JsonReaderImpl::default();
-        let result = reader.read_data(temp_file.path().to_str().unwrap());
-
-        // Verify that an error is returned
+    fn test_read_malformed_file() {
+        let temp_file = create_malformed_file();
+        let result = reader().read_data(temp_file.unwrap().path().to_str().unwrap());
         assert!(result.is_err());
     }
 }

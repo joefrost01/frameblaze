@@ -1,21 +1,20 @@
-use anyhow::Result;
+use crate::format::Format;
+use anyhow::Error;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Config {
-    pub from_format: String,
-    pub to_format: String,
+    pub from_format: Format,
+    pub to_format: Format,
     pub input_file: String,
     pub output_file: Option<String>,
-
     pub include_columns: Option<Vec<String>>,
     pub exclude_columns: Option<Vec<String>>,
 }
 
 impl Config {
-    // Build a config from CLI arguments. We'll do advanced merging in future versions.
     pub fn new(
-        from_format: String,
-        to_format: String,
+        from_format: Format,
+        to_format: Format,
         input_file: String,
         output_file: Option<String>,
         include_columns: Option<Vec<String>>,
@@ -31,14 +30,7 @@ impl Config {
         }
     }
 
-    pub fn validate(&self) -> Result<()> {
-        // Basic validation
-        if !["csv", "parquet", "avro", "ipc", "json"].contains(&self.from_format.as_str()) {
-            anyhow::bail!("Invalid 'from_format': {}", self.from_format);
-        }
-        if !["csv", "parquet", "avro", "ipc", "json"].contains(&self.to_format.as_str()) {
-            anyhow::bail!("Invalid 'to_format': {}", self.to_format);
-        }
+    pub fn validate(&self) -> Result<(), Error> {
         if self.output_file.is_none() {
             anyhow::bail!("Output file must be specified via --output");
         }

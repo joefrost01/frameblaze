@@ -1,130 +1,75 @@
-use clap::{Arg, ArgAction, Command};
 use anyhow::Result;
+use clap::Parser;
 
+mod cli;
 mod config;
+mod format;  // Where the Format enum is
 mod r#from;
 mod r#to;
 mod transform;
+mod test_utils;
 
-use config::Config;
-use r#from::{DataReader, csv::CsvReaderImpl, parquet::ParquetReaderImpl};
-use r#to::{DataWriter, csv::CsvWriterImpl, parquet::ParquetWriterImpl};
-use transform::{Transform, column_filter::ColumnFilter};
-use crate::from::avro::AvroReaderImpl;
-use crate::from::ipc::IpcReaderImpl;
-use crate::from::json::JsonReaderImpl;
-use crate::to::avro::AvroWriterImpl;
-use crate::to::ipc::IpcWriterImpl;
-use crate::to::json::JsonWriterImpl;
+use crate::cli::Cli;
+use crate::config::Config;
+use crate::format::Format;
+use crate::from::{avro::AvroReaderImpl, ipc::IpcReaderImpl, json::JsonReaderImpl};
+use crate::to::{avro::AvroWriterImpl, ipc::IpcWriterImpl, json::JsonWriterImpl};
+use r#from::{csv::CsvReaderImpl, parquet::ParquetReaderImpl, DataReader};
+use r#to::{csv::CsvWriterImpl, parquet::ParquetWriterImpl, DataWriter};
+use transform::{column_filter::ColumnFilter, Transform};
 
 fn main() -> Result<()> {
-    let matches = build_cli().get_matches();
+    // 1. Parse CLI
+    let cli = Cli::parse();
 
-    // Retrieve positional arguments as strings
-    let from_format: &String = matches.get_one("from_format").unwrap();
-    let to_format: &String = matches.get_one("to_format").unwrap();
-    let input_file: &String = matches.get_one("input_file").unwrap();
-
-    // Retrieve `--output` as an optional String
-    let output_file: Option<&String> = matches.get_one("output");
-
-    // Retrieve optional column filters
-    let include_str: Option<&String> = matches.get_one("include_columns");
-    let exclude_str: Option<&String> = matches.get_one("exclude_columns");
-
-    // Retrieve boolean for `--append`
-    let append = matches.get_flag("append");
-
+    // 2. Build config from CLI
     let config = Config::new(
-        from_format.clone(),
-        to_format.clone(),
-        input_file.clone(),
-        output_file.cloned(),
-        // Convert the &String to a String, then split on commas
-        include_str.map(|s| s.split(',').map(|x| x.trim().to_string()).collect()),
-        exclude_str.map(|s| s.split(',').map(|x| x.trim().to_string()).collect()),
+        cli.from_format,
+        cli.to_format,
+        cli.input_file,
+        cli.output,
+        cli.include_columns,
+        cli.exclude_columns,
     );
     config.validate()?;
 
-    // Construct readers/writers based on config
-    let reader = match config.from_format.as_str() {
-        "csv" => DataReader::Csv(CsvReaderImpl::default()),
-        "parquet" => DataReader::Parquet(ParquetReaderImpl::default()),
-        "avro" => DataReader::Avro(AvroReaderImpl::default()),
-        "ipc" => DataReader::Ipc(IpcReaderImpl::default()),
-        "json" => DataReader::Json(JsonReaderImpl::default()),
-        _ => panic!("Unsupported from_format"),
+    // 3. Create reader based on enum
+    let reader = match config.from_format {
+        Format::Csv => DataReader::Csv(CsvReaderImpl::default()),
+        Format::Parquet => DataReader::Parquet(ParquetReaderImpl::default()),
+        Format::Avro => DataReader::Avro(AvroReaderImpl::default()),
+        Format::Ipc => DataReader::Ipc(IpcReaderImpl::default()),
+        Format::Json => DataReader::Json(JsonReaderImpl::default()),
     };
 
-    let writer = match config.to_format.as_str() {
-        "csv" => DataWriter::Csv(CsvWriterImpl::default()),
-        "parquet" => DataWriter::Parquet(ParquetWriterImpl::default()),
-        "avro" => DataWriter::Avro(AvroWriterImpl::default()),
-        "ipc" => DataWriter::Ipc(IpcWriterImpl::default()),
-        "json" => DataWriter::Json(JsonWriterImpl::default()),
-        _ => panic!("Unsupported to_format"),
+    // 4. Create writer based on enum
+    let writer = match config.to_format {
+        Format::Csv => DataWriter::Csv(CsvWriterImpl::default()),
+        Format::Parquet => DataWriter::Parquet(ParquetWriterImpl::default()),
+        Format::Avro => DataWriter::Avro(AvroWriterImpl::default()),
+        Format::Ipc => DataWriter::Ipc(IpcWriterImpl::default()),
+        Format::Json => DataWriter::Json(JsonWriterImpl::default()),
     };
 
-    // Read entire DataFrame - TODO implement chunking to allow dfs larger than memory
+    // 5. Read DataFrame
     let df = reader.read_data(&config.input_file)?;
 
-    // Apply column filter transformation
-    let column_filter = ColumnFilter::new(config.include_columns.clone(),
-                                          config.exclude_columns.clone());
+    // 6. Apply transformations (column filtering)
+    let column_filter = ColumnFilter::new(
+        config.include_columns.clone(),
+        config.exclude_columns.clone(),
+    );
     let df_transformed = column_filter.transform(df)?;
 
-    // Write to output (append only relevant to CSV for now)
-    writer.write_data(config.output_file.as_ref().unwrap(), &df_transformed, append)?;
+    // 7. Write DataFrame
+    writer.write_data(
+        config
+            .output_file
+            .as_ref()
+            .expect("Output file must be provided via --output"),
+        &df_transformed,
+        cli.append,
+    )?;
 
     Ok(())
-}
-
-fn build_cli() -> Command {
-    Command::new("frameblaze")
-        .version("0.1.0")
-        .about("A minimal MVP for converting Parquet <-> CSV with column filtering.")
-        // Three positional args: from_format, to_format, input_file
-        .arg(
-            Arg::new("from_format")
-                .help("Source format: 'csv' or 'parquet'")
-                .required(true)
-                .index(1),
-        )
-        .arg(
-            Arg::new("to_format")
-                .help("Target format: 'csv' or 'parquet'")
-                .required(true)
-                .index(2),
-        )
-        .arg(
-            Arg::new("input_file")
-                .help("Path to input file")
-                .required(true)
-                .index(3),
-        )
-        // Optional flags/parameters
-        .arg(
-            Arg::new("output")
-                .long("output")
-                .help("Output file path")
-                .action(ArgAction::Set), // sets a String
-        )
-        .arg(
-            Arg::new("append")
-                .long("append")
-                .help("Append to existing output (CSV only)")
-                .action(ArgAction::SetTrue), // sets a bool
-        )
-        .arg(
-            Arg::new("include_columns")
-                .long("include-columns")
-                .help("Comma-separated list of columns to keep")
-                .action(ArgAction::Set), // sets a String
-        )
-        .arg(
-            Arg::new("exclude_columns")
-                .long("exclude-columns")
-                .help("Comma-separated list of columns to drop")
-                .action(ArgAction::Set),
-        )
 }

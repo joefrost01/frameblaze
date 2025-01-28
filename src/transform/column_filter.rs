@@ -1,6 +1,6 @@
-use polars::prelude::*;
-use anyhow::Result; // from anyhow crate
 use super::Transform;
+use anyhow::Result;
+use polars::prelude::*;
 
 #[derive(Debug, Clone)]
 pub struct ColumnFilter {
@@ -53,11 +53,11 @@ mod tests {
     use crate::transform::Transform;
 
     fn sample_dataframe() -> DataFrame {
-        (df! {
+        df! {
             "name" => &["Alice", "Bob", "Charlie"],
             "age" => &[30, 25, 35],
             "city" => &["New York", "Los Angeles", "Chicago"]
-        }).unwrap()
+        }.unwrap()
     }
 
     #[test]
@@ -131,5 +131,4 @@ mod tests {
         // Original DataFrame should remain unchanged
         assert_eq!(result.get_column_names(), vec!["name", "age", "city"]);
     }
-
 }

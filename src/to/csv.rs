@@ -14,7 +14,6 @@ impl super::ToFile for CsvWriterImpl {
         CsvWriter::new(file)
             .finish(&mut df_to_write)?;
 
-        // 4. Done!
         Ok(())
     }
 }
@@ -22,51 +21,34 @@ impl super::ToFile for CsvWriterImpl {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::to::ToFile;
-    use std::fs;
-    use tempfile::NamedTempFile;
+    use crate::test_utils::helpers::*;
+    use std::error::Error;
 
-    #[test]
-    fn test_write_valid_csv() {
-        // Create a DataFrame
-        let df = df! {
-            "name" => &["Alice", "Bob"],
-            "age" => &[30, 25],
-            "city" => &["New York", "Los Angeles"]
-        }.unwrap();
+    fn read_fn(path: &str) -> Result<DataFrame, Box<dyn Error>> {
+        let file = File::open(path)?;
+        let df = CsvReader::new(file).finish()?;
+        Ok(df)
+    }
 
-        // Create a temporary file
-        let temp_file = NamedTempFile::new().unwrap();
-        let file_path = temp_file.path().to_str().unwrap();
-
-        // Write the DataFrame to the file
-        let writer = CsvWriterImpl::default();
-        writer.write_data(file_path, &df, false).unwrap();
-
-        // Read back the file contents
-        let contents = fs::read_to_string(file_path).unwrap();
-        let expected = "name,age,city\nAlice,30,New York\nBob,25,Los Angeles\n";
-
-        assert_eq!(contents, expected);
+    fn writer() -> CsvWriterImpl {
+        CsvWriterImpl::default()
     }
 
     #[test]
-    fn test_write_to_nonexistent_directory() {
-        // Create a DataFrame
-        let df = df! {
-            "name" => &["Alice"],
-            "age" => &[30],
-            "city" => &["New York"]
-        }.unwrap();
+    fn test_write_valid_file() -> Result<()> {
+        test_write_read_compare(&writer(), read_fn, false)?;
+        Ok(())
+    }
 
-        // Try writing to a non-existent directory
-        let file_path = "/nonexistent_dir/output.csv";
+    #[test]
+    fn test_write_to_nonexistent_directory() -> Result<()> {
+        test_write_should_fail(&writer());
+        Ok(())
+    }
 
-        // Write the DataFrame
-        let writer = CsvWriterImpl::default();
-        let result = writer.write_data(file_path, &df, false);
-
-        // Ensure an error is returned
-        assert!(result.is_err());
+    #[test]
+    fn test_write_overwrite_file() -> Result<()> {
+        test_write_overwrite(&writer(), read_fn)?;
+        Ok(())
     }
 }
