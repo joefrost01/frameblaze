@@ -1,3 +1,4 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
 use polars_io::avro::AvroWriter;
@@ -8,12 +9,11 @@ pub struct AvroWriterImpl;
 
 impl super::ToFile for AvroWriterImpl {
     fn write_data(&self, path: &str, df: &DataFrame, _append: bool) -> Result<()> {
-        let file = File::create(path)?;
-
+        let mut storage = Storage::new(path)?;
+        let file: File = storage.get_target_file()?;
         let mut df_to_write = df.clone();
-
         AvroWriter::new(file).finish(&mut df_to_write)?;
-
+        storage.finish_write()?;
         Ok(())
     }
 }

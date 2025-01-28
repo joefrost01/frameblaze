@@ -1,14 +1,15 @@
 use super::FromFile;
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
-use std::fs::File;
 
 #[derive(Default)]
 pub struct ParquetReaderImpl;
 
 impl FromFile for ParquetReaderImpl {
     fn read_data(&self, path: &str) -> Result<DataFrame> {
-        let file = File::open(path)?;
+        let mut storage = Storage::new(path)?;
+        let file = storage.get_source_file()?;
         let df = ParquetReader::new(file).finish()?;
         Ok(df)
     }

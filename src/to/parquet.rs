@@ -1,19 +1,18 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
 use std::fs::File;
-use std::path::Path;
 
 #[derive(Default)]
 pub struct ParquetWriterImpl;
 
 impl super::ToFile for ParquetWriterImpl {
     fn write_data(&self, path: &str, df: &DataFrame, _append: bool) -> Result<()> {
-        let file = File::create(Path::new(path))?;
-
+        let mut storage = Storage::new(path)?;
+        let file: File = storage.get_target_file()?;
         let mut df_to_write = df.clone();
-
         ParquetWriter::new(file).finish(&mut df_to_write)?;
-
+        storage.finish_write()?;
         Ok(())
     }
 }

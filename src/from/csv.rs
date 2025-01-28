@@ -1,13 +1,14 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
-use std::fs::File;
 
 #[derive(Default)]
 pub struct CsvReaderImpl;
 
 impl super::FromFile for CsvReaderImpl {
     fn read_data(&self, path: &str) -> Result<DataFrame> {
-        let file = File::open(path)?;
+        let mut storage = Storage::new(path)?;
+        let file = storage.get_source_file()?;
         let df = CsvReader::new(file)
             .finish()?;
         Ok(df)

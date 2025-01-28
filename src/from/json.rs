@@ -1,13 +1,14 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
-use std::fs::File;
 
 #[derive(Default)]
 pub struct JsonReaderImpl;
 
 impl super::FromFile for JsonReaderImpl {
     fn read_data(&self, path: &str) -> Result<DataFrame> {
-        let file = File::open(path)?;
+        let mut storage = Storage::new(path)?;
+        let file = storage.get_source_file()?;
         // By default, this interprets the file as NDJSON (one JSON object per line)
         let df = JsonReader::new(file)
             .with_json_format(JsonFormat::JsonLines)

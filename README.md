@@ -3,7 +3,7 @@
 
 # Frameblaze
 
-**Frameblaze** is a minimal MVP CLI tool written in Rust for converting data between Parquet and CSV formats, with a basic column filter transformation.
+**Frameblaze** is a CLI tool written in Rust for converting data between various formats and locations, with a basic column filter transformation.
 
 ## Documentation
 

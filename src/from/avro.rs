@@ -1,14 +1,15 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
 use polars_io::avro::AvroReader;
-use std::fs::File;
 
 #[derive(Default)]
 pub struct AvroReaderImpl;
 
 impl super::FromFile for AvroReaderImpl {
     fn read_data(&self, path: &str) -> Result<DataFrame> {
-        let file = File::open(path)?;
+        let mut storage = Storage::new(path)?;
+        let file = storage.get_source_file()?;
         let df = AvroReader::new(file)
             .finish()?;
         Ok(df)

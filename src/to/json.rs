@@ -1,3 +1,4 @@
+use crate::storage::Storage;
 use anyhow::Result;
 use polars::prelude::*;
 use std::fs::File;
@@ -7,13 +8,11 @@ pub struct JsonWriterImpl;
 
 impl super::ToFile for JsonWriterImpl {
     fn write_data(&self, path: &str, df: &DataFrame, _append: bool) -> Result<()> {
-        let file = File::create(path)?;
-
-        let mut writer = JsonWriter::new(file)
-            .with_json_format(JsonFormat::JsonLines); // line-delimited
-
-        writer.finish(&mut df.clone())?;
-
+        let mut storage = Storage::new(path)?;
+        let file: File = storage.get_target_file()?;
+        JsonWriter::new(file)
+            .with_json_format(JsonFormat::JsonLines).finish(&mut df.clone())?;
+        storage.finish_write()?;
         Ok(())
     }
 }
