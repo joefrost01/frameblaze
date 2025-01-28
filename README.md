@@ -10,7 +10,7 @@
 Check out the **[official documentation](https://joefrost01.github.io/frameblaze/)** for a quick start and usage guides.
 
 ## Features
-- Convert Parquet ↔ CSV.
+- Convert CSV/Parquet/Avro/Arrow ↔ CSV/Parquet/Avro/Arrow.
 - Include or exclude columns via CLI flags.
 - Extendable architecture to add more formats (Excel, JSON) or transformations later.
 - Apache-2.0 licensed.
