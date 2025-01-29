@@ -9,7 +9,10 @@ impl super::FromFile for CsvReaderImpl {
     fn read_data(&self, path: &str) -> Result<DataFrame> {
         let mut storage = Storage::new(path)?;
         let file = storage.get_source_file()?;
-        let df = CsvReader::new(file)
+
+        let df = CsvReadOptions::default()
+            .with_infer_schema_length(Some(10000))
+            .into_reader_with_file_handle(file)
             .finish()?;
         Ok(df)
     }
