@@ -125,3 +125,83 @@ fn test_csv_to_json_roundtrip() {
         &["name,age,city", "Alice,30,NYC", "Bob,25,SF"],
     );
 }
+
+#[test]
+fn test_csv_to_csv_row_filter_eq_age() {
+    // We'll spool an input CSV with two rows, ages 25 and 40
+    let csv_data = "\
+name,age,city
+Alice,25,NYC
+Charlie,40,LA
+";
+
+    let tmp = tempdir().expect("Unable to create temp dir");
+    let input_csv_path = tmp.path().join("input.csv");
+    let output_csv_path = tmp.path().join("output.csv");
+    fs::write(&input_csv_path, csv_data).expect("Unable to write test CSV");
+
+    // Filter for "age == 25"
+    Command::cargo_bin("frameblaze")
+        .unwrap()
+        .args([
+            "csv",
+            "csv",
+            input_csv_path.to_str().unwrap(),
+            "--output",
+            output_csv_path.to_str().unwrap(),
+            "--row-filter-col",
+            "age",
+            "--row-filter-op",
+            "eq",
+            "--row-filter-val",
+            "25",
+        ])
+        .assert()
+        .success();
+
+    // read result
+    let out_data = fs::read_to_string(&output_csv_path).unwrap();
+    // only "Alice,25,NYC"
+    assert!(out_data.contains("Alice,25,NYC"));
+    assert!(!out_data.contains("Charlie,40,LA"));
+}
+
+#[test]
+fn test_csv_to_csv_row_filter_gt_age() {
+    let csv_data = "\
+name,age,city
+Alice,25,NYC
+Bob,30,SF
+Charlie,35,CHI
+";
+
+    let tmp = tempdir().expect("Unable to create temp dir");
+    let input_csv_path = tmp.path().join("input.csv");
+    let output_csv_path = tmp.path().join("output.csv");
+    fs::write(&input_csv_path, csv_data).expect("Unable to write test CSV");
+
+    // Filter for "age > 25"
+    Command::cargo_bin("frameblaze")
+        .unwrap()
+        .args([
+            "csv",
+            "csv",
+            input_csv_path.to_str().unwrap(),
+            "--output",
+            output_csv_path.to_str().unwrap(),
+            "--row-filter-col",
+            "age",
+            "--row-filter-op",
+            "gt",
+            "--row-filter-val",
+            "25",
+        ])
+        .assert()
+        .success();
+
+    let out_data = fs::read_to_string(&output_csv_path).unwrap();
+    // should contain Bob(30) and Charlie(35), but not Alice(25)
+    assert!(!out_data.contains("Alice,25,NYC"));
+    assert!(out_data.contains("Bob,30,SF"));
+    assert!(out_data.contains("Charlie,35,CHI"));
+}

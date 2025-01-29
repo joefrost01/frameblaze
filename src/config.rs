@@ -9,6 +9,11 @@ pub struct Config {
     pub output_file: Option<String>,
     pub include_columns: Option<Vec<String>>,
     pub exclude_columns: Option<Vec<String>>,
+
+    // new row-filter fields
+    pub row_filter_col: Option<String>,
+    pub row_filter_op: Option<String>,
+    pub row_filter_val: Option<String>,
 }
 
 impl Config {
@@ -19,6 +24,9 @@ impl Config {
         output_file: Option<String>,
         include_columns: Option<Vec<String>>,
         exclude_columns: Option<Vec<String>>,
+        row_filter_col: Option<String>,
+        row_filter_op: Option<String>,
+        row_filter_val: Option<String>,
     ) -> Self {
         Self {
             from_format,
@@ -27,6 +35,10 @@ impl Config {
             output_file,
             include_columns,
             exclude_columns,
+
+            row_filter_col,
+            row_filter_op,
+            row_filter_val,
         }
     }
 
@@ -34,6 +46,7 @@ impl Config {
         if self.output_file.is_none() {
             anyhow::bail!("Output file must be specified via --output");
         }
+        // no other validations needed if row_filter_col/op/val are optional
         Ok(())
     }
 }
