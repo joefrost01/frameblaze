@@ -40,7 +40,7 @@ impl RowFilter {
     }
 }
 
-/// Implement the same `Transform` trait as your ColumnFilter uses.
+/// Implement the same `Transform` trait as ColumnFilter uses.
 impl Transform for RowFilter {
     fn transform(&self, df: DataFrame) -> Result<DataFrame> {
         // Build a Polars expression for the filter
@@ -71,7 +71,7 @@ impl Transform for RowFilter {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::transform::Transform; // or wherever your Transform trait is defined
+    use crate::transform::Transform; 
     use polars::prelude::{DataFrame, df};
 
     /// A helper to build a test DataFrame with i64 integers (to avoid type mismatches).
